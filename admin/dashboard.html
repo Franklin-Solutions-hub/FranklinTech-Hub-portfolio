@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | FranklinTech Hub</title>
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<div class="toast-container" id="toastContainer"></div>
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="admin-layout">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="../unnamed-removebg-preview.png" alt="Logo" class="sidebar-logo" style="object-fit:contain">
+    <span class="sidebar-brand">FranklinTech Hub</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span><span class="label">Dashboard</span></div>
+    <div class="nav-section">Content</div>
+    <div class="nav-item" data-page="hero"><span class="icon">🏠</span><span class="label">Hero Section</span></div>
+    <div class="nav-item" data-page="about"><span class="icon">👤</span><span class="label">About</span></div>
+    <div class="nav-item" data-page="projects"><span class="icon">🚀</span><span class="label">Projects</span></div>
+    <div class="nav-item" data-page="blog"><span class="icon">📝</span><span class="label">Blog</span></div>
+    <div class="nav-item" data-page="skills"><span class="icon">⚡</span><span class="label">Skills</span></div>
+    <div class="nav-item" data-page="experience"><span class="icon">💼</span><span class="label">Experience</span></div>
+    <div class="nav-item" data-page="services"><span class="icon">🛠️</span><span class="label">Services</span></div>
+    <div class="nav-item" data-page="testimonials"><span class="icon">⭐</span><span class="label">Testimonials</span></div>
+    <div class="nav-section">Communication</div>
+    <div class="nav-item" data-page="messages"><span class="icon">✉️</span><span class="label">Messages</span><span class="nav-badge" id="msgBadge" style="display:none">0</span></div>
+    <div class="nav-section">Assets</div>
+    <div class="nav-item" data-page="media"><span class="icon">🖼️</span><span class="label">Media Library</span></div>
+    <div class="nav-section">Configuration</div>
+    <div class="nav-item" data-page="seo"><span class="icon">🔍</span><span class="label">SEO Settings</span></div>
+    <div class="nav-item" data-page="appearance"><span class="icon">🎨</span><span class="label">Appearance</span></div>
+    <div class="nav-item" data-page="social"><span class="icon">🔗</span><span class="label">Social Media</span></div>
+    <div class="nav-item" data-page="settings"><span class="icon">⚙️</span><span class="label">Settings</span></div>
+  </nav>
+  <div style="padding:16px;border-top:1px solid var(--border)">
+    <div class="nav-item" id="logoutBtn"><span class="icon">🚪</span><span class="label">Logout</span></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="topbar-toggle" id="sidebarToggle">☰</button>
+      <h1 class="topbar-title" id="pageTitle">Dashboard</h1>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search..." id="globalSearch">
+      </div>
+      <button class="btn-icon topbar-notif" id="notifBtn">🔔<span class="notif-dot"></span></button>
+      <div class="topbar-avatar" id="avatarBtn">FA</div>
+    </div>
+  </header>
+
+  <!-- PAGE: Dashboard -->
+  <div class="page active" id="page-dashboard"></div>
+  <!-- PAGE: Hero -->
+  <div class="page" id="page-hero"></div>
+  <!-- PAGE: About -->
+  <div class="page" id="page-about"></div>
+  <!-- PAGE: Projects -->
+  <div class="page" id="page-projects"></div>
+  <!-- PAGE: Blog -->
+  <div class="page" id="page-blog"></div>
+  <!-- PAGE: Skills -->
+  <div class="page" id="page-skills"></div>
+  <!-- PAGE: Experience -->
+  <div class="page" id="page-experience"></div>
+  <!-- PAGE: Services -->
+  <div class="page" id="page-services"></div>
+  <!-- PAGE: Testimonials -->
+  <div class="page" id="page-testimonials"></div>
+  <!-- PAGE: Messages -->
+  <div class="page" id="page-messages"></div>
+  <!-- PAGE: Media -->
+  <div class="page" id="page-media"></div>
+  <!-- PAGE: SEO -->
+  <div class="page" id="page-seo"></div>
+  <!-- PAGE: Appearance -->
+  <div class="page" id="page-appearance"></div>
+  <!-- PAGE: Social -->
+  <div class="page" id="page-social"></div>
+  <!-- PAGE: Settings -->
+  <div class="page" id="page-settings"></div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/projects.js"></script>
+<script src="js/blog.js"></script>
+<script src="js/hero.js"></script>
+<script src="js/skills.js"></script>
+<script src="js/experience.js"></script>
+<script src="js/services.js"></script>
+<script src="js/testimonials.js"></script>
+<script src="js/messages.js"></script>
+<script src="js/media.js"></script>
+<script src="js/settings.js"></script>
+<script>
+if(!AdminAuth.isLoggedIn()) window.location.href='index.html';
+App.init();
+</script>
+</body>
+</html>
