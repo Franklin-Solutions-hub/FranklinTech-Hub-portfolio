@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 3000;
 // Serve the static files from the root directory
 app.use(express.static(path.join(__dirname, '.')));
 
-// Catch-all route to serve the main index.html for unknown routes (useful for SPAs)
-app.get('*', (req, res) => {
+// Fallback route to serve the main portfolio HTML for unknown routes
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'franklin_portfolio.html'));
 });
 
