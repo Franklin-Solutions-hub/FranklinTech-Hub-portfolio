@@ -1,4 +1,4 @@
-// ===== EXPERIENCE PAGE =====
+// ===== EXPERIENCE PAGE (Supabase-backed) =====
 const ExperiencePage = (function(){
   function render(){
     const items = Store.get('experience',[]);
@@ -8,6 +8,7 @@ const ExperiencePage = (function(){
       html += `<div class="empty-state"><div class="empty-icon">💼</div><h3>No experience added</h3><p>Add your work history.</p></div>`;
     } else {
       items.forEach(e=>{
+        const desc = e.desc || e.description || '';
         html += `<div class="card" style="margin-bottom:16px">
           <div class="card-header">
             <div><strong style="font-size:1.05rem">${e.role}</strong><br><span style="color:var(--accent2);font-size:.88rem">${e.company}</span></div>
@@ -18,7 +19,7 @@ const ExperiencePage = (function(){
             </div>
           </div>
           <div class="card-body">
-            <p style="color:var(--muted);font-size:.9rem;margin-bottom:12px">${e.desc||''}</p>
+            <p style="color:var(--muted);font-size:.9rem;margin-bottom:12px">${desc}</p>
             <div>${(e.techs||[]).map(t=>`<span class="tech-tag">${t}</span>`).join('')}</div>
           </div>
         </div>`;
@@ -30,6 +31,7 @@ const ExperiencePage = (function(){
   function openForm(id){
     const items = Store.get('experience',[]);
     const e = id ? items.find(x=>x.id===id) : {role:'',company:'',period:'',desc:'',techs:[]};
+    const desc = e.desc || e.description || '';
     showModal(`
       <div class="modal-header"><h3>${id?'Edit':'Add'} Experience</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
       <div class="modal-body">
@@ -38,7 +40,7 @@ const ExperiencePage = (function(){
           <div class="form-group"><label>Company</label><input class="form-input" id="exComp" value="${e.company}"></div>
         </div>
         <div class="form-group"><label>Period</label><input class="form-input" id="exPeriod" value="${e.period}" placeholder="e.g. 2023 – Present"></div>
-        <div class="form-group"><label>Description</label><textarea class="form-input" id="exDesc">${e.desc||''}</textarea></div>
+        <div class="form-group"><label>Description</label><textarea class="form-input" id="exDesc">${desc}</textarea></div>
         <div class="form-group"><label>Technologies (comma separated)</label><input class="form-input" id="exTechs" value="${(e.techs||[]).join(', ')}"></div>
       </div>
       <div class="modal-footer">
@@ -47,24 +49,31 @@ const ExperiencePage = (function(){
       </div>`);
   }
 
-  function save(id){
-    const items = Store.get('experience',[]);
+  async function save(id){
     const data = {
       role:document.getElementById('exRole').value, company:document.getElementById('exComp').value,
       period:document.getElementById('exPeriod').value, desc:document.getElementById('exDesc').value,
       techs:document.getElementById('exTechs').value.split(',').map(t=>t.trim()).filter(Boolean)
     };
     if(!data.role){ showToast('Role is required','error'); return; }
-    if(id){ const i=items.findIndex(x=>x.id===id); if(i>-1) items[i]={...items[i],...data}; }
-    else { data.id=genId(); items.unshift(data); }
-    Store.set('experience',items); closeModal(); render();
-    showToast(id?'Experience updated!':'Experience added!');
-    AdminAuth.addActivity((id?'Updated':'Added')+' experience: '+data.role);
+
+    if(id){
+      await Store.update('experience', id, data);
+      showToast('Experience updated!');
+      AdminAuth.addActivity('Updated experience: '+data.role);
+    } else {
+      await Store.insert('experience', data);
+      showToast('Experience added!');
+      AdminAuth.addActivity('Added experience: '+data.role);
+    }
+    closeModal();
+    render();
   }
 
-  function remove(id){
+  async function remove(id){
     if(!confirm('Delete this entry?')) return;
-    Store.set('experience', Store.get('experience',[]).filter(e=>e.id!==id)); render();
+    await Store.deleteItem('experience', id);
+    render();
     showToast('Entry deleted','info');
   }
 

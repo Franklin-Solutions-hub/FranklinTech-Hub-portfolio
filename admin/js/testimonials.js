@@ -1,4 +1,4 @@
-// ===== TESTIMONIALS PAGE =====
+// ===== TESTIMONIALS PAGE (Supabase-backed) =====
 const TestimonialsPage = (function(){
   function render(){
     const items = Store.get('testimonials',[]);
@@ -52,21 +52,27 @@ const TestimonialsPage = (function(){
       </div>`);
   }
 
-  function save(id){
-    const items = Store.get('testimonials',[]);
+  async function save(id){
     const data = { name:document.getElementById('tName').value, role:document.getElementById('tRole').value,
       text:document.getElementById('tText').value, rating:parseInt(document.getElementById('tRating').value),
       approved:document.getElementById('tApproved').checked };
     if(!data.name||!data.text){ showToast('Name and text required','error'); return; }
-    if(id){ const i=items.findIndex(x=>x.id===id); if(i>-1) items[i]={...items[i],...data}; }
-    else { data.id=genId(); items.push(data); }
-    Store.set('testimonials',items); closeModal(); render();
-    showToast(id?'Testimonial updated!':'Testimonial added!');
+
+    if(id){
+      await Store.update('testimonials', id, data);
+      showToast('Testimonial updated!');
+    } else {
+      await Store.insert('testimonials', data);
+      showToast('Testimonial added!');
+    }
+    closeModal();
+    render();
   }
 
-  function remove(id){
+  async function remove(id){
     if(!confirm('Delete?')) return;
-    Store.set('testimonials', Store.get('testimonials',[]).filter(t=>t.id!==id)); render();
+    await Store.deleteItem('testimonials', id);
+    render();
     showToast('Deleted','info');
   }
 

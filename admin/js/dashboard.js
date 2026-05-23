@@ -12,7 +12,7 @@ const DashboardPage = (function(){
     const stats = [
       {icon:'👁️',label:'Total Visitors',value:1247,change:'+12%',up:true,bg:'rgba(37,99,235,.15)'},
       {icon:'🚀',label:'Projects',value:projects.length,change:'+2',up:true,bg:'rgba(16,185,129,.15)'},
-      {icon:'✉️',label:'Messages',value:msgs.length,change:msgs.filter(m=>!m.read).length+' new',up:true,bg:'rgba(139,92,246,.15)'},
+      {icon:'✉️',label:'Messages',value:msgs.length,change:msgs.filter(m=>!m.read && !m.is_read).length+' new',up:true,bg:'rgba(139,92,246,.15)'},
       {icon:'📝',label:'Blog Posts',value:blog.length,change:'+1',up:true,bg:'rgba(245,158,11,.15)'},
       {icon:'🛠️',label:'Services',value:services.length,change:'',up:true,bg:'rgba(236,72,153,.15)'},
       {icon:'⭐',label:'Testimonials',value:testimonials.length,change:'',up:true,bg:'rgba(6,182,212,.15)'},

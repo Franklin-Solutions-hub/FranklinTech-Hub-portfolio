@@ -1,4 +1,4 @@
-// ===== HERO SECTION CONTROL =====
+// ===== HERO SECTION CONTROL (Supabase-backed) =====
 const HeroPage = (function(){
   function render(){
     const h = Store.get('hero',{});

@@ -1,8 +1,8 @@
-// ===== MESSAGES PAGE =====
+// ===== MESSAGES PAGE (Supabase-backed) =====
 const MessagesPage = (function(){
   function render(){
     const msgs = Store.get('messages',[]);
-    const unread = msgs.filter(m=>!m.read).length;
+    const unread = msgs.filter(m=>!m.read && !m.is_read).length;
     let html = `<div class="items-header"><h2>Messages (${msgs.length})</h2>
       <div style="display:flex;gap:8px">
         ${unread>0?`<span class="badge badge-red">${unread} unread</span>`:''}
@@ -14,7 +14,8 @@ const MessagesPage = (function(){
     } else {
       html += `<div class="card"><div class="card-body" style="padding:0">`;
       msgs.forEach(m=>{
-        html += `<div class="msg-card ${m.read?'':'unread'}" onclick="MessagesPage.view('${m.id}')">
+        const isRead = m.read || m.is_read;
+        html += `<div class="msg-card ${isRead?'':'unread'}" onclick="MessagesPage.view('${m.id}')">
           <div style="display:flex;justify-content:space-between;align-items:start">
             <div>
               <div class="msg-sender">${m.sender}</div>
@@ -33,13 +34,15 @@ const MessagesPage = (function(){
     App.updateMsgBadge();
   }
 
-  function view(id){
+  async function view(id){
     const msgs = Store.get('messages',[]);
     const m = msgs.find(x=>x.id===id);
     if(!m) return;
-    // Mark as read
+    // Mark as read locally and in Supabase
     m.read = true;
-    Store.set('messages',msgs);
+    m.is_read = true;
+    Cache.set('messages', msgs);
+    await Store.update('messages', id, { read: true });
     App.updateMsgBadge();
     showModal(`
       <div class="modal-header"><h3>Message from ${m.sender}</h3><button class="modal-close" onclick="closeModal();MessagesPage.render()">✕</button></div>
@@ -55,16 +58,17 @@ const MessagesPage = (function(){
       </div>`);
   }
 
-  function remove(id){
+  async function remove(id){
     if(!confirm('Delete this message?')) return;
-    Store.set('messages', Store.get('messages',[]).filter(m=>m.id!==id));
-    render(); showToast('Message deleted','info');
+    await Store.deleteItem('messages', id);
+    render();
+    showToast('Message deleted','info');
   }
 
   function exportCSV(){
     const msgs = Store.get('messages',[]);
     let csv = 'Sender,Email,Subject,Body,Time,Read\n';
-    msgs.forEach(m=>{ csv += `"${m.sender}","${m.email}","${m.subject}","${m.body}","${m.time}","${m.read}"\n`; });
+    msgs.forEach(m=>{ csv += `"${m.sender}","${m.email}","${m.subject}","${m.body}","${m.time}","${m.read||m.is_read}"\n`; });
     const blob = new Blob([csv],{type:'text/csv'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);

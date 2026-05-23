@@ -1,4 +1,4 @@
-// ===== BLOG PAGE =====
+// ===== BLOG PAGE (Supabase-backed) =====
 const BlogPage = (function(){
   function render(){
     const posts = Store.get('blog',[]);
@@ -46,8 +46,7 @@ const BlogPage = (function(){
       </div>`);
   }
 
-  function save(id){
-    const posts = Store.get('blog',[]);
+  async function save(id){
     const data = {
       title: document.getElementById('bTitle').value,
       content: document.getElementById('bContent').value,
@@ -57,16 +56,24 @@ const BlogPage = (function(){
       date: new Date().toISOString().split('T')[0]
     };
     if(!data.title){ showToast('Title is required','error'); return; }
-    if(id){ const i=posts.findIndex(x=>x.id===id); if(i>-1) posts[i]={...posts[i],...data}; }
-    else { data.id=genId(); posts.unshift(data); }
-    Store.set('blog',posts); closeModal(); render();
-    showToast(id?'Post updated!':'Post created!');
-    AdminAuth.addActivity((id?'Updated':'Created')+' blog post: '+data.title);
+
+    if(id){
+      await Store.update('blog', id, data);
+      showToast('Post updated!');
+      AdminAuth.addActivity('Updated blog post: '+data.title);
+    } else {
+      await Store.insert('blog', data);
+      showToast('Post created!');
+      AdminAuth.addActivity('Created blog post: '+data.title);
+    }
+    closeModal();
+    render();
   }
 
-  function remove(id){
+  async function remove(id){
     if(!confirm('Delete this post?')) return;
-    Store.set('blog', Store.get('blog',[]).filter(p=>p.id!==id)); render();
+    await Store.deleteItem('blog', id);
+    render();
     showToast('Post deleted','info');
   }
 

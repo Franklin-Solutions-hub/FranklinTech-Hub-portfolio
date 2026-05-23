@@ -1,4 +1,4 @@
-// ===== PROJECTS PAGE =====
+// ===== PROJECTS PAGE (Supabase-backed) =====
 const ProjectsPage = (function(){
   function render(){
     const projects = Store.get('projects',[]);
@@ -14,7 +14,7 @@ const ProjectsPage = (function(){
         html += `<div class="item-card">
           <div class="item-card-img">${p.featured?'⭐':'🚀'}</div>
           <div class="item-card-body">
-            <h3>${p.title}</h3><p>${p.desc||''}</p>
+            <h3>${p.title}</h3><p>${p.desc||p.description||''}</p>
             <div>${(p.techs||[]).map(t=>`<span class="tech-tag">${t}</span>`).join('')}</div>
           </div>
           <div class="item-card-footer">
@@ -35,11 +35,14 @@ const ProjectsPage = (function(){
     const projects = Store.get('projects',[]);
     const p = id ? projects.find(x=>x.id===id) : {id:'',title:'',desc:'',category:'',techs:[],status:'draft',featured:false,github:'',demo:''};
     const isEdit = !!id;
+    const desc = p.desc || p.description || '';
+    const github = p.github || p.github_url || '';
+    const demo = p.demo || p.demo_url || '';
     showModal(`
       <div class="modal-header"><h3>${isEdit?'Edit':'New'} Project</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
       <div class="modal-body">
         <div class="form-group"><label>Title</label><input class="form-input" id="pTitle" value="${p.title}" placeholder="Project title"></div>
-        <div class="form-group"><label>Description</label><textarea class="form-input" id="pDesc" placeholder="Describe your project...">${p.desc||''}</textarea></div>
+        <div class="form-group"><label>Description</label><textarea class="form-input" id="pDesc" placeholder="Describe your project...">${desc}</textarea></div>
         <div class="form-row">
           <div class="form-group"><label>Category</label><input class="form-input" id="pCat" value="${p.category||''}" placeholder="e.g. Web App"></div>
           <div class="form-group"><label>Status</label><select class="form-input" id="pStatus">
@@ -48,8 +51,8 @@ const ProjectsPage = (function(){
           </select></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>GitHub URL</label><input class="form-input" id="pGit" value="${p.github||''}" placeholder="https://github.com/..."></div>
-          <div class="form-group"><label>Live Demo URL</label><input class="form-input" id="pDemo" value="${p.demo||''}" placeholder="https://..."></div>
+          <div class="form-group"><label>GitHub URL</label><input class="form-input" id="pGit" value="${github}" placeholder="https://github.com/..."></div>
+          <div class="form-group"><label>Live Demo URL</label><input class="form-input" id="pDemo" value="${demo}" placeholder="https://..."></div>
         </div>
         <div class="form-group"><label>Technologies (comma separated)</label><input class="form-input" id="pTechs" value="${(p.techs||[]).join(', ')}" placeholder="React, Node.js, MongoDB"></div>
         <div class="form-group"><label class="form-switch"><input type="checkbox" id="pFeatured" ${p.featured?'checked':''}><span class="slider"></span><span style="margin-left:8px">Featured Project</span></label></div>
@@ -61,8 +64,7 @@ const ProjectsPage = (function(){
     `);
   }
 
-  function save(id){
-    const projects = Store.get('projects',[]);
+  async function save(id){
     const data = {
       title: document.getElementById('pTitle').value,
       desc: document.getElementById('pDesc').value,
@@ -75,18 +77,24 @@ const ProjectsPage = (function(){
       date: new Date().toISOString().split('T')[0]
     };
     if(!data.title){ showToast('Title is required','error'); return; }
-    if(id){ const i=projects.findIndex(x=>x.id===id); if(i>-1){projects[i]={...projects[i],...data};} }
-    else { data.id=genId(); projects.unshift(data); }
-    Store.set('projects',projects);
-    closeModal(); render();
-    showToast(id?'Project updated!':'Project created!');
-    AdminAuth.addActivity((id?'Updated':'Created')+' project: '+data.title);
+
+    if(id){
+      await Store.update('projects', id, data);
+      showToast('Project updated!');
+      AdminAuth.addActivity('Updated project: '+data.title);
+    } else {
+      await Store.insert('projects', data);
+      showToast('Project created!');
+      AdminAuth.addActivity('Created project: '+data.title);
+    }
+    closeModal();
+    render();
   }
 
-  function remove(id){
+  async function remove(id){
     if(!confirm('Delete this project?')) return;
-    const projects = Store.get('projects',[]).filter(p=>p.id!==id);
-    Store.set('projects',projects); render();
+    await Store.deleteItem('projects', id);
+    render();
     showToast('Project deleted','info');
     AdminAuth.addActivity('Deleted a project');
   }
