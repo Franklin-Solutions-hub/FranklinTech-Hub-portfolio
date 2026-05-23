@@ -1,0 +1,25 @@
+{
+  "name": "my-portfolio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Franklin-Solutions-hub/FranklinTech-Hub-portfolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Franklin-Solutions-hub/FranklinTech-Hub-portfolio/issues"
+  },
+  "homepage": "https://github.com/Franklin-Solutions-hub/FranklinTech-Hub-portfolio#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
