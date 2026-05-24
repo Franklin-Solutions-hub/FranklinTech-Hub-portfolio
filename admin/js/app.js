@@ -169,15 +169,21 @@ const App = (function(){
   let currentPage = 'dashboard';
 
   async function init(){
-    // Load data from Supabase in background, then re-render current page
-    loadAllData().then(() => {
-      loadPage(currentPage);
-      updateMsgBadge();
-    });
-
     setupSidebar();
     setupLogout();
     setupMobile();
+
+    // Show loading state on dashboard
+    const dashEl = document.getElementById('page-dashboard');
+    if(dashEl) dashEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:16px"><div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite"></div><p style="color:var(--muted)">Loading data from cloud...</p></div>';
+
+    // Load data from Supabase FIRST, then render
+    try {
+      await loadAllData();
+    } catch(e) {
+      console.warn('Supabase load failed, using cache:', e);
+    }
+
     navigateTo('dashboard');
     updateMsgBadge();
   }
@@ -251,7 +257,7 @@ const App = (function(){
 
   function updateMsgBadge(){
     const msgs = Store.get('messages',[]);
-    const unread = msgs.filter(m=>!m.read).length;
+    const unread = msgs.filter(m=>!(m.read || m.is_read)).length;
     const badge = document.getElementById('msgBadge');
     if(unread>0){ badge.style.display='inline'; badge.textContent=unread; }
     else { badge.style.display='none'; }
