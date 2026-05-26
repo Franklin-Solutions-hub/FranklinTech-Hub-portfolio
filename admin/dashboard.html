@@ -115,8 +115,11 @@
 <script src="js/media.js"></script>
 <script src="js/settings.js"></script>
 <script>
-if(!AdminAuth.isLoggedIn()) window.location.href='index.html';
-App.init();
+(async function() {
+  await window.initSupabase();
+  if(!await AdminAuth.isLoggedIn()) window.location.href='index.html';
+  App.init();
+})();
 </script>
 </body>
 </html>

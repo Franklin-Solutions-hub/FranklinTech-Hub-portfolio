@@ -43,6 +43,21 @@ const Store = {
     return row;
   },
 
+  // Helper to sanitize inputs
+  _sanitizeObj(obj) {
+    const clean = {};
+    for (const [k, v] of Object.entries(obj)) {
+      if (typeof v === 'string') {
+        clean[k] = v.replace(/[&<>"'/]/ig, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', "/": '&#x2F;'}[m]));
+      } else if (Array.isArray(v)) {
+        clean[k] = v.map(item => typeof item === 'string' ? item.replace(/[&<>"'/]/ig, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', "/": '&#x2F;'}[m])) : item);
+      } else {
+        clean[k] = v;
+      }
+    }
+    return clean;
+  },
+
   // Convert Supabase row → app object
   _fromRow(key, row) {
     const map = this._reverseFieldMap[key] || {};
@@ -114,6 +129,7 @@ const Store = {
   // ===== CRUD helpers for array-based tables =====
 
   async insert(key, item) {
+    item = this._sanitizeObj(item);
     const table = TABLE_MAP[key];
     if (!table) return null;
     const row = this._toRow(key, item);
@@ -131,6 +147,7 @@ const Store = {
   },
 
   async update(key, id, updates) {
+    updates = this._sanitizeObj(updates);
     const table = TABLE_MAP[key];
     if (!table) return null;
     const row = this._toRow(key, updates);

@@ -127,42 +127,42 @@ CREATE POLICY "Public read messages" ON messages FOR SELECT USING (true);
 CREATE POLICY "Public read site_settings" ON site_settings FOR SELECT USING (true);
 CREATE POLICY "Public read media" ON media FOR SELECT USING (true);
 
--- Anon insert/update/delete access (admin dashboard uses anon key with simple password auth)
-CREATE POLICY "Anon insert projects" ON projects FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anon update projects" ON projects FOR UPDATE USING (true);
-CREATE POLICY "Anon delete projects" ON projects FOR DELETE USING (true);
+-- Authenticated insert/update/delete access (requires Supabase Auth session)
+CREATE POLICY "Anon insert projects" ON projects FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Anon update projects" ON projects FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anon delete projects" ON projects FOR DELETE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Anon insert blog_posts" ON blog_posts FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anon update blog_posts" ON blog_posts FOR UPDATE USING (true);
-CREATE POLICY "Anon delete blog_posts" ON blog_posts FOR DELETE USING (true);
+CREATE POLICY "Anon insert blog_posts" ON blog_posts FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Anon update blog_posts" ON blog_posts FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anon delete blog_posts" ON blog_posts FOR DELETE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Anon insert skills" ON skills FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anon update skills" ON skills FOR UPDATE USING (true);
-CREATE POLICY "Anon delete skills" ON skills FOR DELETE USING (true);
+CREATE POLICY "Anon insert skills" ON skills FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Anon update skills" ON skills FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anon delete skills" ON skills FOR DELETE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Anon insert experience" ON experience FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anon update experience" ON experience FOR UPDATE USING (true);
-CREATE POLICY "Anon delete experience" ON experience FOR DELETE USING (true);
+CREATE POLICY "Anon insert experience" ON experience FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Anon update experience" ON experience FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anon delete experience" ON experience FOR DELETE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Anon insert services" ON services FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anon update services" ON services FOR UPDATE USING (true);
-CREATE POLICY "Anon delete services" ON services FOR DELETE USING (true);
+CREATE POLICY "Anon insert services" ON services FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Anon update services" ON services FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anon delete services" ON services FOR DELETE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Anon insert testimonials" ON testimonials FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anon update testimonials" ON testimonials FOR UPDATE USING (true);
-CREATE POLICY "Anon delete testimonials" ON testimonials FOR DELETE USING (true);
+CREATE POLICY "Anon insert testimonials" ON testimonials FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Anon update testimonials" ON testimonials FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anon delete testimonials" ON testimonials FOR DELETE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Anon insert messages" ON messages FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anon update messages" ON messages FOR UPDATE USING (true);
-CREATE POLICY "Anon delete messages" ON messages FOR DELETE USING (true);
+CREATE POLICY "Anon insert messages" ON messages FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Anon update messages" ON messages FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anon delete messages" ON messages FOR DELETE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Anon insert site_settings" ON site_settings FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anon update site_settings" ON site_settings FOR UPDATE USING (true);
-CREATE POLICY "Anon delete site_settings" ON site_settings FOR DELETE USING (true);
+CREATE POLICY "Anon insert site_settings" ON site_settings FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Anon update site_settings" ON site_settings FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anon delete site_settings" ON site_settings FOR DELETE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Anon insert media" ON media FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anon update media" ON media FOR UPDATE USING (true);
-CREATE POLICY "Anon delete media" ON media FOR DELETE USING (true);
+CREATE POLICY "Anon insert media" ON media FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Anon update media" ON media FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anon delete media" ON media FOR DELETE USING (auth.role() = 'authenticated');
 
 -- ============================================
 -- INDEXES

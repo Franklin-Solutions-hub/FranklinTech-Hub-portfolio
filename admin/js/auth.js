@@ -1,47 +1,39 @@
 // ===== AUTH MODULE =====
 const AdminAuth = (function(){
-  const CREDENTIALS = { email:'Franklintechhub', password:'Fragamah@12' };
-  const SESSION_KEY = 'ft_admin_session';
   const HISTORY_KEY = 'ft_login_history';
   const ACTIVITY_KEY = 'ft_activity_log';
 
-  function login(email, password){
-    if(email === CREDENTIALS.email && password === CREDENTIALS.password){
-      const session = {
-        loggedIn: true,
-        email: email,
-        loginTime: new Date().toISOString(),
-        expires: Date.now() + 24*60*60*1000
-      };
-      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-      addLoginHistory(email);
-      addActivity('Logged in successfully');
-      return true;
+  async function login(email, password){
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+    
+    if (error) {
+      console.error("Login error:", error);
+      addActivity('Failed login attempt for: ' + email);
+      return false;
     }
-    addActivity('Failed login attempt for: ' + email);
-    return false;
+    
+    addLoginHistory(email);
+    addActivity('Logged in successfully');
+    return true;
   }
 
-  function logout(){
+  async function logout(){
     addActivity('Logged out');
-    localStorage.removeItem(SESSION_KEY);
+    await supabase.auth.signOut();
     window.location.href = 'index.html';
   }
 
-  function isLoggedIn(){
-    const s = localStorage.getItem(SESSION_KEY);
-    if(!s) return false;
-    const session = JSON.parse(s);
-    if(Date.now() > session.expires){
-      localStorage.removeItem(SESSION_KEY);
-      return false;
-    }
-    return session.loggedIn;
+  async function isLoggedIn(){
+    const { data: { session } } = await supabase.auth.getSession();
+    return !!session;
   }
 
-  function getSession(){
-    const s = localStorage.getItem(SESSION_KEY);
-    return s ? JSON.parse(s) : null;
+  async function getSession(){
+    const { data: { session } } = await supabase.auth.getSession();
+    return session;
   }
 
   function addLoginHistory(email){
