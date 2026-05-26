@@ -1,6 +1,6 @@
 // ===== AUTH MODULE =====
 const AdminAuth = (function(){
-  const CREDENTIALS = { email:'admin@franklin.com', password:'admin123' };
+  const CREDENTIALS = { email:'Franklintechhub', password:'Fragamah@12' };
   const SESSION_KEY = 'ft_admin_session';
   const HISTORY_KEY = 'ft_login_history';
   const ACTIVITY_KEY = 'ft_activity_log';
