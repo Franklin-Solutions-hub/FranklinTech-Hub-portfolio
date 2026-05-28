@@ -34,7 +34,7 @@
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js"></script>
+<script src="js/supabase-config.js?v=2"></script>
 <script src="js/auth.js"></script>
 <script>
 // Particles
@@ -56,7 +56,7 @@
     console.error('Failed to initialize Supabase:', e);
     const err=document.getElementById('loginError');
     err.classList.add('show');
-    err.textContent='Server not reachable. Make sure the server is running (node server.js).';
+    err.textContent='Init Error: ' + (e.message || String(e));
     return;
   }
 
