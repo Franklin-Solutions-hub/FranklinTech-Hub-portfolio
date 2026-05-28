@@ -3,13 +3,9 @@ let supabase;
 
 window.initSupabase = async function() {
   if (supabase) return;
-  const res = await fetch('/api/config');
-  if (!res.ok) throw new Error('Failed to fetch config: ' + res.status);
-  const config = await res.json();
-  if (!config.SUPABASE_URL || !config.SUPABASE_ANON_KEY) {
-    throw new Error('Missing Supabase credentials in server config. Check your .env file.');
-  }
-  supabase = window.supabase.createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY);
+  const SUPABASE_URL = 'https://fibkvgreggwigrslecjf.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpYmt2Z3JlZ2d3aWdyc2xlY2pmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NjY1MzAsImV4cCI6MjA5NTE0MjUzMH0.4kt83lTVVR7lG0GZXu4ThU0-QpFIeOg_nkshaAPwLZw';
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 };
 
 // Table name mapping from old localStorage keys to Supabase tables

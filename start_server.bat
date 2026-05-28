@@ -4,13 +4,13 @@ echo ============================================
 echo    FranklinTech Hub - Local Server
 echo ============================================
 echo.
-echo Starting local server on http://localhost:8000
+echo Starting local Node.js server on http://localhost:3000
 echo.
-echo  Website:  http://localhost:8000/franklin_portfolio.html
-echo  Admin:    http://localhost:8000/admin/index.html
+echo  Website:  http://localhost:3000/franklin_portfolio.html
+echo  Admin:    http://localhost:3000/admin/index.html
 echo.
 echo Press Ctrl+C to stop the server.
 echo ============================================
 echo.
 cd /d "%~dp0"
-python -m http.server 8000
+node server.js

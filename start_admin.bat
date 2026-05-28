@@ -5,7 +5,7 @@ echo    FranklinTech Hub - Admin Dashboard
 echo ============================================
 echo.
 echo Opening admin dashboard...
-start "" "http://localhost:8000/admin/index.html"
+start "" "http://localhost:3000/admin/index.html"
 echo Admin dashboard opened in your default browser!
 echo.
 pause
