@@ -2348,6 +2348,17 @@
     // ===== LOAD ALL DATA FROM SUPABASE =====
     (async function loadFromSupabase() {
       try {
+        // --- CV Download ---
+        const cvPdf = await getSetting('cv_pdf');
+        if (cvPdf) {
+          const btn = document.getElementById('cvDownloadBtn');
+          if (btn) {
+            btn.href = cvPdf;
+            btn.download = "FranklinTech_Hub_CV.pdf";
+            btn.removeAttribute("onclick");
+          }
+        }
+
         // --- Hero ---
         const hero = await getSetting('hero');
         if (hero) {

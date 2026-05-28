@@ -25,4 +25,4 @@ const TABLE_MAP = {
 };
 
 // Settings stored as key-value pairs in site_settings table
-const SETTINGS_KEYS = ['hero', 'social', 'seo', 'appearance', 'about'];
+const SETTINGS_KEYS = ['hero', 'social', 'seo', 'appearance', 'about', 'cv_pdf'];
