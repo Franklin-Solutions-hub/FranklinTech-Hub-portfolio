@@ -2379,7 +2379,7 @@
               ht.innerHTML = html;
             }
           }
-          if (hero.roles && hero.roles.length > 0) { roles = hero.roles; charIdx = 0; roleIdx = 0; }
+          if (hero.roles && hero.roles.length > 0) { roles = hero.roles; charIdx = 0; roleIdx = 0; deleting = false; }
           if (hero.stats && hero.stats.length > 0) {
             const hs = document.getElementById('heroStats');
             if (hs) {
