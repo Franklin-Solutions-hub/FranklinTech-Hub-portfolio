@@ -1165,20 +1165,32 @@
       transform: none
     }
 
-    /* MOBILE */
+    /* ===== MOBILE RESPONSIVE ===== */
     @media(max-width:768px) {
       nav {
-        padding: 14px 20px
+        padding: 12px 16px
+      }
+
+      .nav-logo span {
+        font-size: .9rem !important
+      }
+
+      .nav-logo img {
+        height: 34px !important
       }
 
       .nav-links {
         display: none
       }
 
+      .nav-actions .btn-primary {
+        display: none
+      }
+
       .hero-inner {
         grid-template-columns: 1fr;
         text-align: center;
-        gap: 40px
+        gap: 30px
       }
 
       .hero-img-wrap {
@@ -1186,36 +1198,194 @@
       }
 
       .hero-photo {
-        width: 220px;
-        height: 220px
+        width: 180px;
+        height: 180px
       }
 
-      .hero-cta,
-      .hero-socials,
-      .hero-stats {
+      .hero-text h1 {
+        font-size: clamp(2rem, 8vw, 2.8rem)
+      }
+
+      .hero-text p {
+        max-width: 100%;
+        font-size: .9rem
+      }
+
+      .typing-wrap {
+        font-size: 1rem
+      }
+
+      .hero-cta {
+        justify-content: center;
+        gap: 10px
+      }
+
+      .hero-cta .btn {
+        padding: 10px 16px;
+        font-size: .82rem
+      }
+
+      .hero-socials {
         justify-content: center
       }
 
-      section {
-        padding: 60px 20px
+      .hero-stats {
+        justify-content: center;
+        gap: 20px
       }
 
-      #about .about-grid,
-      .contact-grid {
+      .stat-num {
+        font-size: 1.6rem
+      }
+
+      section {
+        padding: 50px 16px
+      }
+
+      .section-title {
+        font-size: clamp(1.6rem, 6vw, 2.2rem)
+      }
+
+      #about .about-grid {
+        grid-template-columns: 1fr;
+        gap: 30px
+      }
+
+      .about-text h3 {
+        font-size: 1.4rem
+      }
+
+      .skills-cats {
         grid-template-columns: 1fr
       }
 
+      #skills {
+        padding: 50px 16px
+      }
+
+      .exp-card {
+        padding: 20px
+      }
+
+      .exp-header {
+        flex-direction: column;
+        gap: 8px
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr
+      }
+
+      #services .inner {
+        padding: 0 16px !important
+      }
+
       .testimonial-card {
-        min-width: 300px
+        min-width: calc(100vw - 64px)
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 30px
+      }
+
+      .contact-form {
+        padding: 20px
+      }
+
+      .contact-form div[style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important
       }
 
       #hero {
-        padding: 80px 20px 40px
+        padding: 80px 16px 40px;
+        min-height: auto
       }
 
       .img-ring,
       .img-ring2 {
         display: none
+      }
+
+      #contact {
+        padding: 50px 16px !important
+      }
+
+      footer {
+        padding: 30px 16px
+      }
+
+      .proj-thumb {
+        height: 160px
+      }
+
+      .hero-badge {
+        display: none
+      }
+
+      .service-card {
+        padding: 20px
+      }
+
+      .svc-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem
+      }
+    }
+
+    @media(max-width:480px) {
+      .hero-photo {
+        width: 150px;
+        height: 150px
+      }
+
+      .hero-cta .btn {
+        padding: 9px 14px;
+        font-size: .78rem;
+        gap: 4px
+      }
+
+      .hero-cta .btn svg {
+        width: 14px;
+        height: 14px
+      }
+
+      .social-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px
+      }
+
+      .social-icon svg {
+        width: 18px;
+        height: 18px
+      }
+
+      .hero-stats {
+        gap: 16px
+      }
+
+      .stat-num {
+        font-size: 1.4rem
+      }
+
+      .stat-label {
+        font-size: .7rem
+      }
+
+      .badge {
+        font-size: .72rem !important;
+        padding: 5px 12px !important
+      }
+
+      .filter-btn {
+        padding: 6px 14px;
+        font-size: .8rem
       }
     }
 
@@ -2014,7 +2184,7 @@
         </div>
         <div class="contact-form reveal">
           <h3 style="margin-bottom:24px;font-size:1.2rem">Send a Message</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="form-name-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
             <div class="form-group"><label>First Name</label><input type="text" id="msgFirstName"
                 placeholder="Franklin"></div>
             <div class="form-group"><label>Last Name</label><input type="text" id="msgLastName" placeholder="Tornyeli">
@@ -2043,12 +2213,19 @@
       Hub. All rights reserved. Built with ❤️ in Accra.</p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // TYPING EFFECT
+    // ===== SUPABASE INIT =====
+    const SUPABASE_URL = 'https://fibkvgreggwigrslecjf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpYmt2Z3JlZ2d3aWdyc2xlY2pmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NjY1MzAsImV4cCI6MjA5NTE0MjUzMH0.4kt83lTVVR7lG0GZXu4ThU0-QpFIeOg_nkshaAPwLZw';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ===== TYPING EFFECT =====
     let roles = ['IT Support Specialist', 'Software Developer', 'Digital Marketer', 'Freelance Tech Consultant'];
     let roleIdx = 0, charIdx = 0, deleting = false;
     function type() {
       const el = document.getElementById('typed');
+      if (!el) return;
       const cur = roles[roleIdx];
       if (!deleting) { el.textContent = cur.slice(0, ++charIdx); if (charIdx === cur.length) { deleting = true; setTimeout(type, 1800); return } }
       else { el.textContent = cur.slice(0, --charIdx); if (charIdx === 0) { deleting = false; roleIdx = (roleIdx + 1) % roles.length } }
@@ -2056,9 +2233,10 @@
     }
     type();
 
-    // PARTICLES
+    // ===== PARTICLES =====
     (function () {
       const p = document.getElementById('particles');
+      if (!p) return;
       for (let i = 0; i < 20; i++) {
         const d = document.createElement('div');
         const size = Math.random() * 4 + 2;
@@ -2068,14 +2246,14 @@
       }
     })();
 
-    // COUNTERS
+    // ===== COUNTERS =====
     function animateCounter(el) {
       const target = +el.dataset.target; let cur = 0;
       const step = target / 60;
       const timer = setInterval(() => { cur = Math.min(cur + step, target); el.textContent = Math.floor(cur) + (target >= 10 ? '+' : ''); if (cur >= target) clearInterval(timer); }, 25);
     }
 
-    // SCROLL REVEAL & SKILL BARS
+    // ===== SCROLL REVEAL & SKILL BARS =====
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -2088,30 +2266,33 @@
       });
     }, { threshold: .15 });
     document.querySelectorAll('.reveal,[data-target]').forEach(el => observer.observe(el));
-    // Also observe stat nums
     document.querySelectorAll('.stat-num').forEach(el => observer.observe(el));
-
-    // SKILLS in skills section: observe skill cards
     document.querySelectorAll('.skill-card').forEach(card => observer.observe(card));
 
-    // SLIDER
+    // ===== TESTIMONIAL SLIDER =====
     const slider = document.getElementById('testimonialSlider');
-    const nav = document.getElementById('sliderNav');
-    const cards = slider.querySelectorAll('.testimonial-card');
-    let current = 0;
-    cards.forEach((_, i) => {
-      const dot = document.createElement('div'); dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
-      dot.onclick = () => goTo(i); nav.appendChild(dot);
-    });
-    function goTo(idx) {
-      current = idx;
-      const w = cards[0].offsetWidth + 24;
-      slider.style.transform = `translateX(-${idx * w}px)`;
-      nav.querySelectorAll('.slider-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    const navEl = document.getElementById('sliderNav');
+    let tCards, current = 0, autoSlide;
+    function initSlider() {
+      tCards = slider.querySelectorAll('.testimonial-card');
+      navEl.innerHTML = '';
+      tCards.forEach((_, i) => {
+        const dot = document.createElement('div'); dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => goTo(i); navEl.appendChild(dot);
+      });
+      if (autoSlide) clearInterval(autoSlide);
+      if (tCards.length > 0) autoSlide = setInterval(() => goTo((current + 1) % tCards.length), 4000);
     }
-    setInterval(() => goTo((current + 1) % cards.length), 4000);
+    function goTo(idx) {
+      if (!tCards || !tCards.length) return;
+      current = idx;
+      const w = tCards[0].offsetWidth + 24;
+      slider.style.transform = `translateX(-${idx * w}px)`;
+      navEl.querySelectorAll('.slider-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+    initSlider();
 
-    // FILTER
+    // ===== FILTER =====
     function filterProjects(cat, btn) {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -2120,197 +2301,129 @@
       });
     }
 
-    // DARK/LIGHT MODE
+    // ===== DARK/LIGHT MODE =====
     function toggleMode() { document.body.classList.toggle('light') }
 
-    // MOBILE MENU
+    // ===== MOBILE MENU =====
     function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open') }
     function closeMobile() { document.getElementById('mobileMenu').classList.remove('open') }
 
-    // SEND MESSAGE
-    function sendMessage() {
+    // ===== SEND MESSAGE (to Supabase) =====
+    async function sendMessage() {
       const fName = document.getElementById('msgFirstName').value.trim();
       const lName = document.getElementById('msgLastName').value.trim();
       const email = document.getElementById('msgEmail').value.trim();
       const subject = document.getElementById('msgSubject').value.trim();
       const body = document.getElementById('msgBody').value.trim();
-
-      if (!fName || !email || !body) {
-        alert('Please fill in your name, email, and message.');
-        return;
-      }
-
-      const newMsg = {
-        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
-        sender: fName + (lName ? ' ' + lName : ''),
-        email: email,
-        subject: subject || 'New Message from Portfolio',
-        body: body,
-        time: new Date().toISOString(),
-        read: false
-      };
-
+      if (!fName || !email || !body) { alert('Please fill in your name, email, and message.'); return; }
       try {
-        const msgs = JSON.parse(localStorage.getItem('ft_messages') || '[]');
-        msgs.unshift(newMsg);
-        localStorage.setItem('ft_messages', JSON.stringify(msgs));
-
+        const { error } = await sb.from('messages').insert([{
+          sender: fName + (lName ? ' ' + lName : ''),
+          email: email,
+          subject: subject || 'New Message from Portfolio',
+          body: body,
+          is_read: false
+        }]);
+        if (error) throw error;
         alert('Thank you! Your message has been sent. Franklin will get back to you shortly.');
-
-        // Clear form
         document.getElementById('msgFirstName').value = '';
         document.getElementById('msgLastName').value = '';
         document.getElementById('msgEmail').value = '';
         document.getElementById('msgSubject').value = '';
         document.getElementById('msgBody').value = '';
       } catch (e) {
+        console.error('Message send error:', e);
         alert('There was an error sending your message. Please try again.');
       }
     }
 
-    // LOAD CV IF AVAILABLE
-    (function () {
+    // ===== HELPER: get setting from Supabase =====
+    async function getSetting(key) {
       try {
-        const rawData = localStorage.getItem('ft_cv_pdf');
-        if (rawData) {
-          const cvData = JSON.parse(rawData);
-          if (cvData) {
-            const btn = document.getElementById('cvDownloadBtn');
-            if (btn) {
-              btn.href = cvData;
-              btn.download = "FranklinTech_Hub_CV.pdf";
-              btn.removeAttribute("onclick");
+        const { data } = await sb.from('site_settings').select('value').eq('key', key).single();
+        return data ? data.value : null;
+      } catch (e) { return null; }
+    }
+
+    // ===== LOAD ALL DATA FROM SUPABASE =====
+    (async function loadFromSupabase() {
+      try {
+        // --- Hero ---
+        const hero = await getSetting('hero');
+        if (hero) {
+          if (hero.locationBadge) {
+            const hlb = document.getElementById('heroLocationBadge');
+            if (hlb) hlb.innerHTML = hero.locationBadge;
+          }
+          if (hero.bio) {
+            const hb = document.getElementById('heroBio');
+            if (hb) hb.textContent = hero.bio;
+          }
+          if (hero.title || hero.subtitle || hero.subtitle2) {
+            const ht = document.getElementById('heroTitle');
+            if (ht) {
+              let html = hero.title || 'Franklin';
+              if (hero.subtitle) html += '<br><span>' + hero.subtitle + '</span>';
+              if (hero.subtitle2) html += '<br>' + hero.subtitle2;
+              ht.innerHTML = html;
+            }
+          }
+          if (hero.roles && hero.roles.length > 0) { roles = hero.roles; charIdx = 0; roleIdx = 0; }
+          if (hero.stats && hero.stats.length > 0) {
+            const hs = document.getElementById('heroStats');
+            if (hs) {
+              hs.innerHTML = hero.stats.map(s => `
+                <div class="stat"><div class="stat-num" data-target="${s.value}">0</div><div class="stat-label">${s.label}</div></div>
+              `).join('');
+              hs.querySelectorAll('.stat-num').forEach(el => observer.observe(el));
             }
           }
         }
 
-        // Load Hero
-        const rawHero = localStorage.getItem('ft_hero');
-        if (rawHero) {
-          const hero = JSON.parse(rawHero);
-          if (hero) {
-            if (hero.locationBadge) {
-              const hlb = document.getElementById('heroLocationBadge');
-              if (hlb) hlb.innerHTML = hero.locationBadge;
-            }
-            if (hero.bio) {
-              const hb = document.getElementById('heroBio');
-              if (hb) hb.textContent = hero.bio;
-            }
-            if (hero.title || hero.subtitle || hero.subtitle2) {
-              const ht = document.getElementById('heroTitle');
-              if (ht) {
-                let html = hero.title || 'Franklin';
-                if (hero.subtitle) html += '<br><span>' + hero.subtitle + '</span>';
-                if (hero.subtitle2) html += '<br>' + hero.subtitle2;
-                ht.innerHTML = html;
-              }
-            }
-            if (hero.roles && hero.roles.length > 0) {
-              roles = hero.roles;
-            }
-            if (hero.stats && hero.stats.length > 0) {
-              const hs = document.getElementById('heroStats');
-              if (hs) {
-                hs.innerHTML = hero.stats.map(s => `
-                  <div class="stat">
-                    <div class="stat-num" data-target="${s.value}">0</div>
-                    <div class="stat-label">${s.label}</div>
-                  </div>
-                `).join('');
-                if (typeof observer !== 'undefined') {
-                  hs.querySelectorAll('.stat-num').forEach(el => observer.observe(el));
-                }
-              }
+        // --- About ---
+        const about = await getSetting('about');
+        if (about) {
+          if (about.bio) {
+            const ab = document.getElementById('aboutBioText');
+            if (ab) ab.innerHTML = '<p>' + about.bio.replace(/\n/g, '</p><p>') + '</p>' + (about.objective ? '<p><strong>Objective: </strong>' + about.objective + '</p>' : '');
+          }
+          if (about.hobbies && about.hobbies.length > 0) {
+            const ah = document.getElementById('aboutHobbies');
+            if (ah) ah.innerHTML = about.hobbies.map(h => `<span class="interest-tag">⚡ ${h}</span>`).join('');
+          }
+          if ((about.education && about.education.length > 0) || (about.certifications && about.certifications.length > 0)) {
+            const ae = document.getElementById('aboutEdu');
+            if (ae) {
+              let eduHtml = '';
+              if (about.education) eduHtml += about.education.map(e => `<div class="edu-item"><div class="edu-dot">🎓</div><div class="edu-info"><h4>${e.degree}</h4><p>${e.school} &bull; ${e.year}</p></div></div>`).join('');
+              if (about.certifications) eduHtml += about.certifications.map(c => `<div class="edu-item"><div class="edu-dot">🏆</div><div class="edu-info"><h4>Certification</h4><p>${c}</p></div></div>`).join('');
+              ae.innerHTML = eduHtml;
             }
           }
         }
 
-        // Load About
-        const rawAbout = localStorage.getItem('ft_about');
-        if (rawAbout) {
-          const about = JSON.parse(rawAbout);
-          if (about) {
-            if (about.bio) {
-              const ab = document.getElementById('aboutBioText');
-              if (ab) ab.innerHTML = '<p>' + about.bio.replace(/\n/g, '</p><p>') + '</p>' + (about.objective ? '<p><strong>Objective: </strong>' + about.objective + '</p>' : '');
-            }
-            if (about.hobbies && about.hobbies.length > 0) {
-              const ah = document.getElementById('aboutHobbies');
-              if (ah) ah.innerHTML = about.hobbies.map(h => `<span class="interest-tag">⚡ ${h}</span>`).join('');
-            }
-            if ((about.education && about.education.length > 0) || (about.certifications && about.certifications.length > 0)) {
-              const ae = document.getElementById('aboutEdu');
-              if (ae) {
-                let eduHtml = '';
-                if (about.education) {
-                  eduHtml += about.education.map(e => `
-                    <div class="edu-item">
-                      <div class="edu-dot">🎓</div>
-                      <div class="edu-info">
-                        <h4>${e.degree}</h4>
-                        <p>${e.school} &bull; ${e.year}</p>
-                      </div>
-                    </div>
-                  `).join('');
-                }
-                if (about.certifications) {
-                  eduHtml += about.certifications.map(c => `
-                    <div class="edu-item">
-                      <div class="edu-dot">🏆</div>
-                      <div class="edu-info">
-                        <h4>Certification</h4>
-                        <p>${c}</p>
-                      </div>
-                    </div>
-                  `).join('');
-                }
-                ae.innerHTML = eduHtml;
-              }
-            }
-          }
+        // --- Social links ---
+        const social = await getSetting('social');
+        if (social) {
+          const setLink = (title, url, isMail) => {
+            if (!url) return;
+            document.querySelectorAll(`a[title="${title}"]`).forEach(a => {
+              a.href = isMail && !url.startsWith('mailto:') ? 'mailto:' + url : url;
+            });
+          };
+          setLink('GitHub', social.github);
+          setLink('LinkedIn', social.linkedin);
+          setLink('WhatsApp', social.whatsapp);
+          setLink('Twitter/X', social.twitter);
+          setLink('TikTok', social.tiktok);
+          setLink('Email', social.email, true);
+          if (social.phone) { const cp = document.getElementById('contactPhone'); if (cp) cp.textContent = social.phone; }
+          if (social.email) { const ce = document.getElementById('contactEmail'); if (ce) ce.textContent = social.email; }
+          if (social.location) { const cl = document.getElementById('contactLocation'); if (cl) cl.textContent = social.location; }
+          if (social.whatsapp) { const fw = document.querySelector('.floating-wa'); if (fw) fw.href = social.whatsapp; }
         }
 
-        // Load Socials
-        const rawSocial = localStorage.getItem('ft_social');
-        if (rawSocial) {
-          const social = JSON.parse(rawSocial);
-          if (social) {
-            const setLink = (title, url, isMail) => {
-              if (!url) return;
-              document.querySelectorAll(`a[title="${title}"]`).forEach(a => {
-                a.href = isMail && !url.startsWith('mailto:') ? 'mailto:' + url : url;
-              });
-            };
-            setLink('GitHub', social.github);
-            setLink('LinkedIn', social.linkedin);
-            setLink('WhatsApp', social.whatsapp);
-            setLink('Twitter/X', social.twitter);
-            setLink('TikTok', social.tiktok);
-            setLink('Email', social.email, true);
-
-            // Update contact text fields
-            if (social.phone) {
-              const cp = document.getElementById('contactPhone');
-              if (cp) cp.textContent = social.phone;
-            }
-            if (social.email) {
-              const ce = document.getElementById('contactEmail');
-              if (ce) ce.textContent = social.email;
-            }
-            if (social.location) {
-              const cl = document.getElementById('contactLocation');
-              if (cl) cl.textContent = social.location;
-            }
-
-            // Update floating WhatsApp if it exists
-            if (social.whatsapp) {
-              const floatWa = document.querySelector('.floating-wa');
-              if (floatWa) floatWa.href = social.whatsapp;
-            }
-          }
-        }
-      } catch (e) { }
+      } catch (e) { console.error('Error loading from Supabase:', e); }
     })();
   </script>
 

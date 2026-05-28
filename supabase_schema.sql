@@ -152,7 +152,7 @@ CREATE POLICY "Anon insert testimonials" ON testimonials FOR INSERT WITH CHECK (
 CREATE POLICY "Anon update testimonials" ON testimonials FOR UPDATE USING (auth.role() = 'authenticated');
 CREATE POLICY "Anon delete testimonials" ON testimonials FOR DELETE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Anon insert messages" ON messages FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Public insert messages" ON messages FOR INSERT WITH CHECK (true);
 CREATE POLICY "Anon update messages" ON messages FOR UPDATE USING (auth.role() = 'authenticated');
 CREATE POLICY "Anon delete messages" ON messages FOR DELETE USING (auth.role() = 'authenticated');
 
