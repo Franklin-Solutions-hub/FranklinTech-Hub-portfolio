@@ -20,11 +20,14 @@
     <form id="loginForm" autocomplete="off">
       <div class="form-group">
         <label>Email Address</label>
-        <input type="text" class="form-input" id="loginEmail" placeholder="Franklintechhub" required>
+        <input type="email" class="form-input" id="loginEmail" placeholder="Franklintechhubsolutions@gmail.com" required>
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
+        <div style="position: relative;">
+          <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required style="padding-right: 40px;">
+          <button type="button" class="password-toggle" id="togglePassword" title="Toggle password visibility">👁️</button>
+        </div>
       </div>
       <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
     </form>
@@ -47,25 +50,66 @@
 })();
 
 (async function() {
-  await window.initSupabase();
+  try {
+    await window.initSupabase();
+  } catch(e) {
+    console.error('Failed to initialize Supabase:', e);
+    const err=document.getElementById('loginError');
+    err.classList.add('show');
+    err.textContent='Server not reachable. Make sure the server is running (node server.js).';
+    return;
+  }
 
   document.getElementById('loginForm').addEventListener('submit', async function(e){
     e.preventDefault();
-    const email=document.getElementById('loginEmail').value;
+    const email=document.getElementById('loginEmail').value.trim();
     const pw=document.getElementById('loginPassword').value;
-    const success = await AdminAuth.login(email,pw);
-    if(success){
-      window.location.href='dashboard.html';
-    } else {
-      const err=document.getElementById('loginError');
+    const err=document.getElementById('loginError');
+
+    if(!email.includes('@')){
       err.classList.add('show');
-      err.textContent='Invalid email or password. Please try again.';
+      err.textContent='Please enter a valid email address.';
       setTimeout(()=>err.classList.remove('show'),3000);
+      return;
+    }
+
+    const btn=document.getElementById('loginBtn');
+    btn.disabled=true;
+    btn.textContent='Signing in...';
+
+    try {
+      const success = await AdminAuth.login(email,pw);
+      if(success){
+        window.location.href='dashboard.html';
+      } else {
+        err.classList.add('show');
+        err.textContent='Invalid email or password. Please try again.';
+        setTimeout(()=>err.classList.remove('show'),3000);
+      }
+    } catch(loginErr) {
+      console.error('Login error:', loginErr);
+      err.classList.add('show');
+      err.textContent='Connection error. Please check the server.';
+      setTimeout(()=>err.classList.remove('show'),4000);
+    } finally {
+      btn.disabled=false;
+      btn.textContent='Sign In';
     }
   });
 
   // If already logged in, redirect
-  if(await AdminAuth.isLoggedIn()) window.location.href='dashboard.html';
+  try {
+    if(await AdminAuth.isLoggedIn()) window.location.href='dashboard.html';
+  } catch(e) { /* not logged in */ }
+
+  // Password toggle logic
+  const toggleBtn = document.getElementById('togglePassword');
+  const pwInput = document.getElementById('loginPassword');
+  toggleBtn.addEventListener('click', () => {
+    const type = pwInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    pwInput.setAttribute('type', type);
+    toggleBtn.textContent = type === 'password' ? '👁️' : '🙈';
+  });
 })();
 </script>
 </body>

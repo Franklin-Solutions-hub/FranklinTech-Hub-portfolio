@@ -274,3 +274,7 @@ input,textarea,select{font-family:inherit;outline:none}
 /* ===== LOADING SPINNER ===== */
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== PASSWORD TOGGLE ===== */
+.password-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);cursor:pointer;background:none;border:none;padding:4px;font-size:1.1rem;transition:var(--transition);display:flex;align-items:center;justify-content:center}
+.password-toggle:hover{color:var(--text)}

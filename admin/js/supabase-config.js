@@ -4,7 +4,11 @@ let supabase;
 window.initSupabase = async function() {
   if (supabase) return;
   const res = await fetch('/api/config');
+  if (!res.ok) throw new Error('Failed to fetch config: ' + res.status);
   const config = await res.json();
+  if (!config.SUPABASE_URL || !config.SUPABASE_ANON_KEY) {
+    throw new Error('Missing Supabase credentials in server config. Check your .env file.');
+  }
   supabase = window.supabase.createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY);
 };
 
