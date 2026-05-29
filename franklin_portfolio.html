@@ -2397,19 +2397,20 @@
             } else {
               pg.innerHTML = projectsData.map(p => {
                 const links = [];
-                if (p.demo_url) links.push(`<a href="${p.demo_url}" target="_blank" class="btn btn-primary" style="padding:8px 16px;font-size:.8rem">🔗 Demo</a>`);
-                if (p.github_url) links.push(`<a href="${p.github_url}" target="_blank" class="btn btn-outline" style="padding:8px 16px;font-size:.8rem;color:#fff;border-color:#fff">💻 GitHub</a>`);
-                const overlay = links.length ? `<div class="proj-overlay">${links.join('')}</div>` : '';
+                if (p.demo_url && p.demo_url !== '#') links.push(`<a href="${p.demo_url}" target="_blank" class="btn btn-primary" style="padding:6px 12px;font-size:.75rem">🔗 Demo</a>`);
+                if (p.github_url && p.github_url !== '#') links.push(`<a href="${p.github_url}" target="_blank" class="btn btn-outline" style="padding:6px 12px;font-size:.75rem;color:var(--text);border-color:var(--border)">💻 GitHub</a>`);
+                const linksHtml = links.length ? `<div style="display:flex;gap:8px;margin-top:16px">${links.join('')}</div>` : '';
                 const cat = (p.category || '').toLowerCase();
                 const icon = p.featured ? '⭐' : '🚀';
                 const techs = (p.techs || []).map(t => `<span class="tech-tag">${t}</span>`).join('');
                 return `
                   <div class="proj-card reveal" data-category="${cat}">
-                    <div class="proj-thumb">${icon}${overlay}</div>
+                    <div class="proj-thumb" style="height: 160px;">${icon}</div>
                     <div class="proj-body">
                       <h3>${p.title}</h3>
                       <p>${p.description || ''}</p>
                       <div class="tech-tags">${techs}</div>
+                      ${linksHtml}
                     </div>
                   </div>
                 `;

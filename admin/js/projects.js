@@ -17,11 +17,17 @@ const ProjectsPage = (function(){
             <h3>${p.title}</h3><p>${p.desc||p.description||''}</p>
             <div>${(p.techs||[]).map(t=>`<span class="tech-tag">${t}</span>`).join('')}</div>
           </div>
-          <div class="item-card-footer">
-            <span class="badge ${statusClass}">${p.status||'draft'}</span>
-            <div class="item-actions">
-              <button class="btn-icon" onclick="ProjectsPage.openForm('${p.id}')" title="Edit">✏️</button>
-              <button class="btn-icon" onclick="ProjectsPage.remove('${p.id}')" title="Delete">🗑️</button>
+          <div class="item-card-footer" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              <span class="badge ${statusClass}">${p.status||'draft'}</span>
+              <div class="item-actions">
+                <button class="btn-icon" onclick="ProjectsPage.openForm('${p.id}')" title="Edit">✏️</button>
+                <button class="btn-icon" onclick="ProjectsPage.remove('${p.id}')" title="Delete">🗑️</button>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; font-size: 0.8rem;">
+              ${(p.demo||p.demo_url) ? `<a href="${p.demo||p.demo_url}" target="_blank" style="color: var(--accent); text-decoration: none;">🔗 Demo</a>` : ''}
+              ${(p.github||p.github_url) ? `<a href="${p.github||p.github_url}" target="_blank" style="color: var(--text); text-decoration: none;">💻 GitHub</a>` : ''}
             </div>
           </div>
         </div>`;
