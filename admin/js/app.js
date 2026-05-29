@@ -11,7 +11,7 @@ const Cache = {
 const Store = {
   // Column mapping from old localStorage field names to Supabase column names
   _fieldMap: {
-    projects: { desc:'description', github:'github_url', demo:'demo_url' },
+    projects: { desc:'description', github:'github_url', demo:'demo_url', image:'image_url' },
     blog: { /* tags and content map 1:1 */ },
     skills: { pct:'proficiency' },
     experience: { desc:'description' },
@@ -23,7 +23,7 @@ const Store = {
 
   // Reverse mapping (Supabase column → app field)
   _reverseFieldMap: {
-    projects: { description:'desc', github_url:'github', demo_url:'demo' },
+    projects: { description:'desc', github_url:'github', demo_url:'demo', image_url:'image' },
     blog: {},
     skills: { proficiency:'pct' },
     experience: { description:'desc' },

@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS projects (
   featured BOOLEAN DEFAULT false,
   github_url TEXT DEFAULT '',
   demo_url TEXT DEFAULT '',
+  image_url TEXT DEFAULT '',
   date TEXT DEFAULT '',
   created_at TIMESTAMPTZ DEFAULT now()
 );

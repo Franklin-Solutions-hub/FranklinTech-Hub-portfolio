@@ -12,7 +12,7 @@ const ProjectsPage = (function(){
       projects.forEach(p=>{
         const statusClass = p.status==='published'?'badge-green':'badge-orange';
         html += `<div class="item-card">
-          <div class="item-card-img">${p.featured?'⭐':'🚀'}</div>
+          <div class="item-card-img" style="${p.image ? `background-image:url(${p.image});background-size:cover;background-position:center;` : ''}">${p.image ? '' : (p.featured?'⭐':'🚀')}</div>
           <div class="item-card-body">
             <h3>${p.title}</h3><p>${p.desc||p.description||''}</p>
             <div>${(p.techs||[]).map(t=>`<span class="tech-tag">${t}</span>`).join('')}</div>
@@ -39,14 +39,26 @@ const ProjectsPage = (function(){
 
   function openForm(id){
     const projects = Store.get('projects',[]);
-    const p = id ? projects.find(x=>x.id===id) : {id:'',title:'',desc:'',category:'',techs:[],status:'draft',featured:false,github:'',demo:''};
+    const p = id ? projects.find(x=>x.id===id) : {id:'',title:'',desc:'',category:'',techs:[],status:'draft',featured:false,github:'',demo:'',image:''};
     const isEdit = !!id;
     const desc = p.desc || p.description || '';
     const github = p.github || p.github_url || '';
     const demo = p.demo || p.demo_url || '';
+    const img = p.image || p.image_url || '';
     showModal(`
       <div class="modal-header"><h3>${isEdit?'Edit':'New'} Project</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
       <div class="modal-body">
+        <div style="display:flex;gap:16px;margin-bottom:16px;">
+          <div id="pImagePreview" style="width:100px;height:100px;border-radius:8px;background:var(--surface);border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
+            ${img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;">` : '<span style="font-size:2rem;color:var(--muted)">🖼️</span>'}
+          </div>
+          <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;">
+            <label style="font-size:0.85rem;margin-bottom:8px;display:block;">Project Screenshot (Optional)</label>
+            <input type="file" id="pImageInput" accept="image/*" class="form-input" style="padding:6px;">
+            <input type="hidden" id="pImageHidden" value="${img}">
+            <small style="color:var(--muted);margin-top:4px;">Max 2MB. Leave empty to use default icon.</small>
+          </div>
+        </div>
         <div class="form-group"><label>Title</label><input class="form-input" id="pTitle" value="${p.title}" placeholder="Project title"></div>
         <div class="form-group"><label>Description</label><textarea class="form-input" id="pDesc" placeholder="Describe your project...">${desc}</textarea></div>
         <div class="form-row">
@@ -68,6 +80,18 @@ const ProjectsPage = (function(){
         <button class="btn btn-primary btn-sm" onclick="ProjectsPage.save('${p.id||''}')">Save Project</button>
       </div>
     `);
+
+    document.getElementById('pImageInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if(!file) return;
+      if(file.size > 2*1024*1024){ showToast('Image too large (max 2MB)','error'); e.target.value=''; return; }
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        document.getElementById('pImageHidden').value = evt.target.result;
+        document.getElementById('pImagePreview').innerHTML = `<img src="${evt.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   async function save(id){
@@ -78,6 +102,7 @@ const ProjectsPage = (function(){
       status: document.getElementById('pStatus').value,
       github: document.getElementById('pGit').value,
       demo: document.getElementById('pDemo').value,
+      image: document.getElementById('pImageHidden').value,
       techs: document.getElementById('pTechs').value.split(',').map(t=>t.trim()).filter(Boolean),
       featured: document.getElementById('pFeatured').checked,
       date: new Date().toISOString().split('T')[0]

@@ -2402,10 +2402,13 @@
                 const linksHtml = links.length ? `<div style="display:flex;gap:8px;margin-top:16px">${links.join('')}</div>` : '';
                 const cat = (p.category || '').toLowerCase();
                 const icon = p.featured ? '⭐' : '🚀';
+                const imageHtml = p.image_url ? `<img src="${p.image_url}" style="width:100%;height:100%;object-fit:cover;">` : icon;
                 const techs = (p.techs || []).map(t => `<span class="tech-tag">${t}</span>`).join('');
                 return `
                   <div class="proj-card reveal" data-category="${cat}">
-                    <div class="proj-thumb" style="height: 160px;">${icon}</div>
+                    <div class="proj-thumb" style="height: 160px; padding: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: ${p.image_url ? 'inherit' : '3rem'};">
+                      ${imageHtml}
+                    </div>
                     <div class="proj-body">
                       <h3>${p.title}</h3>
                       <p>${p.description || ''}</p>
