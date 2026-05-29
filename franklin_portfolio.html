@@ -1939,54 +1939,7 @@
       <button class="filter-btn" onclick="filterProjects('it', this)">IT Projects</button>
     </div>
     <div class="projects-grid" id="projectsGrid">
-      <div class="proj-card reveal" data-category="system web">
-        <div class="proj-thumb">🏥
-          <div class="proj-overlay">
-            <a href="#" class="btn btn-primary" style="padding:8px 16px;font-size:.8rem">🔗 Demo</a>
-            <a href="#" class="btn btn-outline" style="padding:8px 16px;font-size:.8rem;color:#fff;border-color:#fff">💻
-              GitHub</a>
-          </div>
-        </div>
-        <div class="proj-body">
-          <h3>Hospital Management System</h3>
-          <p>Full-featured HMS with patient registration, appointment booking, doctor management, and integrated billing
-            system hosted on a local server.</p>
-          <div class="tech-tags"><span class="tech-tag">HTML</span><span class="tech-tag">CSS</span><span
-              class="tech-tag">JS</span><span class="tech-tag">MySQL</span><span class="tech-tag">PHP</span></div>
-        </div>
-      </div>
-      <div class="proj-card reveal" data-category="web">
-        <div class="proj-thumb" style="background:linear-gradient(135deg,rgba(56,189,248,.3),rgba(99,102,241,.2))">🛒
-          <div class="proj-overlay">
-            <a href="#" class="btn btn-primary" style="padding:8px 16px;font-size:.8rem">🔗 Demo</a>
-            <a href="#" class="btn btn-outline" style="padding:8px 16px;font-size:.8rem;color:#fff;border-color:#fff">💻
-              GitHub</a>
-          </div>
-        </div>
-        <div class="proj-body">
-          <h3>E-Commerce Platform</h3>
-          <p>Modern e-commerce website with product catalog, shopping cart, payment integration, and admin dashboard for
-            inventory management.</p>
-          <div class="tech-tags"><span class="tech-tag">React</span><span class="tech-tag">Node.js</span><span
-              class="tech-tag">MySQL</span></div>
-        </div>
-      </div>
-      <div class="proj-card reveal" data-category="it">
-        <div class="proj-thumb" style="background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(239,68,68,.2))">🌐
-          <div class="proj-overlay">
-            <a href="#" class="btn btn-primary" style="padding:8px 16px;font-size:.8rem">🔗 Demo</a>
-            <a href="#" class="btn btn-outline" style="padding:8px 16px;font-size:.8rem;color:#fff;border-color:#fff">💻
-              GitHub</a>
-          </div>
-        </div>
-        <div class="proj-body">
-          <h3>Network Infrastructure Setup</h3>
-          <p>Designed and implemented a complete office network solution including routing, switching, wireless access
-            points, and security configuration.</p>
-          <div class="tech-tags"><span class="tech-tag">Cisco</span><span class="tech-tag">TCP/IP</span><span
-              class="tech-tag">VPN</span></div>
-        </div>
-      </div>
+      <!-- Projects will be dynamically loaded here from Supabase -->
     </div>
     <div style="text-align:center;margin-top:36px">
       <a href="#" class="btn btn-outline" onclick="alert('Full portfolio coming soon!')">View All Projects →</a>
@@ -2432,6 +2385,39 @@
           if (social.email) { const ce = document.getElementById('contactEmail'); if (ce) ce.textContent = social.email; }
           if (social.location) { const cl = document.getElementById('contactLocation'); if (cl) cl.textContent = social.location; }
           if (social.whatsapp) { const fw = document.querySelector('.floating-wa'); if (fw) fw.href = social.whatsapp; }
+        }
+
+        // --- Projects ---
+        const { data: projectsData, error: projErr } = await sb.from('projects').select('*').eq('status', 'published').order('created_at', { ascending: false });
+        if (!projErr && projectsData) {
+          const pg = document.getElementById('projectsGrid');
+          if (pg) {
+            if (projectsData.length === 0) {
+              pg.innerHTML = '<p style="color:var(--muted)">No featured projects to display yet.</p>';
+            } else {
+              pg.innerHTML = projectsData.map(p => {
+                const links = [];
+                if (p.demo_url) links.push(`<a href="${p.demo_url}" target="_blank" class="btn btn-primary" style="padding:8px 16px;font-size:.8rem">🔗 Demo</a>`);
+                if (p.github_url) links.push(`<a href="${p.github_url}" target="_blank" class="btn btn-outline" style="padding:8px 16px;font-size:.8rem;color:#fff;border-color:#fff">💻 GitHub</a>`);
+                const overlay = links.length ? `<div class="proj-overlay">${links.join('')}</div>` : '';
+                const cat = (p.category || '').toLowerCase();
+                const icon = p.featured ? '⭐' : '🚀';
+                const techs = (p.techs || []).map(t => `<span class="tech-tag">${t}</span>`).join('');
+                return `
+                  <div class="proj-card reveal" data-category="${cat}">
+                    <div class="proj-thumb">${icon}${overlay}</div>
+                    <div class="proj-body">
+                      <h3>${p.title}</h3>
+                      <p>${p.description || ''}</p>
+                      <div class="tech-tags">${techs}</div>
+                    </div>
+                  </div>
+                `;
+              }).join('');
+              // re-observe for animation
+              pg.querySelectorAll('.proj-card').forEach(c => observer.observe(c));
+            }
+          }
         }
 
       } catch (e) { console.error('Error loading from Supabase:', e); }
