@@ -43,14 +43,17 @@ const Store = {
     return row;
   },
 
-  // Helper to sanitize inputs
   _sanitizeObj(obj) {
     const clean = {};
     for (const [k, v] of Object.entries(obj)) {
       if (typeof v === 'string') {
-        clean[k] = v.replace(/[&<>"'/]/ig, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', "/": '&#x2F;'}[m]));
+        if (v.startsWith('data:image/')) {
+          clean[k] = v; // Allow base64 images unmodified
+        } else {
+          clean[k] = v.replace(/[&<>"']/ig, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;'}[m]));
+        }
       } else if (Array.isArray(v)) {
-        clean[k] = v.map(item => typeof item === 'string' ? item.replace(/[&<>"'/]/ig, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', "/": '&#x2F;'}[m])) : item);
+        clean[k] = v.map(item => typeof item === 'string' ? item.replace(/[&<>"']/ig, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;'}[m])) : item);
       } else {
         clean[k] = v;
       }
