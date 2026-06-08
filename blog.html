@@ -1922,11 +1922,13 @@
     const navEl = document.getElementById('sliderNav');
     let tCards, current = 0, autoSlide;
     function initSlider() {
+      if (!slider) return;
       tCards = slider.querySelectorAll('.testimonial-card');
-      navEl.innerHTML = '';
+      if (navEl) navEl.innerHTML = '';
       tCards.forEach((_, i) => {
         const dot = document.createElement('div'); dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
-        dot.onclick = () => goTo(i); navEl.appendChild(dot);
+        dot.onclick = () => goTo(i); 
+        if (navEl) navEl.appendChild(dot);
       });
       if (autoSlide) clearInterval(autoSlide);
       if (tCards.length > 0) autoSlide = setInterval(() => goTo((current + 1) % tCards.length), 4000);
