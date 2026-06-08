@@ -2504,6 +2504,22 @@
       } catch (e) { return null; }
     }
 
+    // ===== INSTANT IMAGE CACHE (no delay) =====
+    (function loadCachedImages() {
+      try {
+        const cachedHero = localStorage.getItem('ft_hero_image');
+        if (cachedHero) {
+          const hi = document.getElementById('heroImage');
+          if (hi) hi.src = cachedHero;
+        }
+        const cachedAbout = localStorage.getItem('ft_about_image');
+        if (cachedAbout) {
+          const ai = document.getElementById('aboutImage');
+          if (ai) ai.src = cachedAbout;
+        }
+      } catch(e) {}
+    })();
+
     // ===== LOAD ALL DATA FROM SUPABASE =====
     (async function loadFromSupabase() {
       try {
@@ -2524,6 +2540,7 @@
           if (hero.image_url) {
             const hi = document.getElementById('heroImage');
             if (hi) hi.src = hero.image_url;
+            try { localStorage.setItem('ft_hero_image', hero.image_url); } catch(e) {}
           }
           if (hero.locationBadge) {
             const hlb = document.getElementById('heroLocationBadge');
@@ -2560,6 +2577,7 @@
           if (about.image_url) {
             const ai = document.getElementById('aboutImage');
             if (ai) ai.src = about.image_url;
+            try { localStorage.setItem('ft_about_image', about.image_url); } catch(e) {}
           }
           if (about.bio) {
             const ab = document.getElementById('aboutBioText');
