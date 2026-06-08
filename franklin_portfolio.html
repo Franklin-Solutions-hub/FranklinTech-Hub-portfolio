@@ -1704,7 +1704,7 @@
     <a href="#experience" onclick="closeMobile()">Experience</a>
     <a href="#projects" onclick="closeMobile()">Projects</a>
     <a href="#services" onclick="closeMobile()">Services</a>
-    <a href="#blog" onclick="closeMobile()">Blog</a>
+    <a href="blog.html" onclick="closeMobile()">Blog</a>
     <a href="#contact" onclick="closeMobile()">Contact</a>
   </div>
 
@@ -1724,7 +1724,7 @@
       <li><a href="#experience">Experience</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#services">Services</a></li>
-      <li><a href="#blog">Blog</a></li>
+      <li><a href="blog.html">Blog</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-actions">
@@ -2273,32 +2273,6 @@
       <div class="slider-nav" id="sliderNav"></div>
     </div>
   </section>
-
-  <!-- BLOG -->
-  <section id="blog" style="background:var(--bg2);padding:90px 40px;max-width:none">
-    <div class="inner">
-      <div class="section-label reveal">Blog</div>
-      <h2 class="section-title reveal">Latest <span style="color:var(--accent2)">Articles</span></h2>
-      <div class="section-line reveal"></div>
-      <div class="blog-grid" id="blogGrid">
-        <p style="color:var(--muted)">Loading blog posts...</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Blog Modal -->
-  <div class="blog-modal-overlay" id="blogModalOverlay" onclick="if(event.target===this)closeBlogModal()">
-    <div class="blog-modal">
-      <button class="blog-modal-close" onclick="closeBlogModal()">&times;</button>
-      <h2 id="blogModalTitle"></h2>
-      <div class="blog-modal-meta">
-        <span class="blog-category" id="blogModalCategory"></span>
-        <span class="blog-date" id="blogModalDate"></span>
-      </div>
-      <div class="blog-tags" id="blogModalTags"></div>
-      <div class="blog-modal-content" id="blogModalContent"></div>
-    </div>
-  </div>
 
   <!-- CONTACT -->
   <section id="contact" style="background:var(--bg2);max-width:none;padding:90px 40px">
