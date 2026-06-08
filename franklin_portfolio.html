@@ -2651,9 +2651,13 @@
               if (isMail && !url.startsWith('mailto:')) {
                 a.href = 'mailto:' + url;
               } else if (title === 'WhatsApp' && !url.startsWith('http')) {
-                a.href = 'https://wa.me/' + url.replace(/[^0-9]/g, '');
+                let wa = url.replace(/[^0-9]/g, '');
+                if (wa.startsWith('0')) wa = '233' + wa.substring(1);
+                a.href = 'https://wa.me/' + wa;
               } else if (title === 'Telegram' && !url.startsWith('http')) {
-                a.href = 'https://t.me/' + url.replace(/[^a-zA-Z0-9_]/g, '');
+                let tg = url.replace(/[^a-zA-Z0-9_+]/g, '');
+                if (tg.startsWith('0') && tg.match(/^[0-9]+$/)) tg = '+233' + tg.substring(1);
+                a.href = 'https://t.me/' + tg;
               } else {
                 a.href = url;
               }
@@ -2673,7 +2677,11 @@
             const fw = document.querySelector('.floating-wa'); 
             if (fw) {
               let wa = social.whatsapp;
-              if (!wa.startsWith('http')) wa = 'https://wa.me/' + wa.replace(/[^0-9]/g, '');
+              if (!wa.startsWith('http')) {
+                wa = wa.replace(/[^0-9]/g, '');
+                if (wa.startsWith('0')) wa = '233' + wa.substring(1);
+                wa = 'https://wa.me/' + wa;
+              }
               fw.href = wa;
             }
           }
@@ -2681,7 +2689,11 @@
             const ft = document.querySelector('.floating-tg'); 
             if (ft) {
               let tg = social.telegram;
-              if (!tg.startsWith('http')) tg = 'https://t.me/' + tg.replace(/[^a-zA-Z0-9_]/g, '');
+              if (!tg.startsWith('http')) {
+                tg = tg.replace(/[^a-zA-Z0-9_+]/g, '');
+                if (tg.startsWith('0') && tg.match(/^[0-9]+$/)) tg = '+233' + tg.substring(1);
+                tg = 'https://t.me/' + tg;
+              }
               ft.href = tg;
             }
           }
