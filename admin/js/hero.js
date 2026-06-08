@@ -1,8 +1,15 @@
 // ===== HERO SECTION CONTROL (Supabase-backed) =====
 const HeroPage = (function(){
+  // Temp stores for images before saving
+  let tempHeroImage = null;
+  let tempAboutImage = null;
+
   function render(){
     const h = Store.get('hero',{});
     const social = Store.get('social',{});
+    // Reset temp image on render
+    tempHeroImage = h.image_url || null;
+
     let html = `<div class="page-header"><h1>Hero Section</h1><p>Control the hero banner of your portfolio.</p></div>`;
     html += `<div class="grid-2">`;
 
@@ -27,6 +34,21 @@ const HeroPage = (function(){
     });
     html += `<button class="btn btn-primary btn-sm" onclick="HeroPage.saveStats()">Save Stats</button>
     </div></div></div>`;
+
+    // Hero Image Upload
+    html += `<div class="card" style="margin-top:20px"><div class="card-header"><span class="card-title">Hero Image</span></div><div class="card-body">
+      <div class="dropzone" id="heroDropzone" onclick="document.getElementById('heroImageInput').click()"
+        ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')"
+        ondrop="event.preventDefault();this.classList.remove('dragover');HeroPage.handleHeroImageDrop(event)">
+        <div class="dropzone-icon">🖼️</div>
+        <div class="dropzone-text" id="heroDropzoneText">Drag & drop hero image here or click to upload<br><small style="color:var(--muted)">PNG, JPG, SVG, WEBP supported</small></div>
+        <input type="file" id="heroImageInput" style="display:none" accept="image/*" onchange="HeroPage.handleHeroImageUpload(event)">
+      </div>
+      <div id="heroImagePreview" style="margin-top:12px;text-align:center;">
+        ${tempHeroImage ? `<img src="${tempHeroImage}" style="max-height:200px;border-radius:12px;border:2px solid var(--border)">` : ''}
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="HeroPage.saveHero()" style="margin-top:12px">Save Image</button>
+    </div></div>`;
 
     // Social links
     html += `<div class="card" style="margin-top:20px"><div class="card-header"><span class="card-title">Social Links</span></div><div class="card-body">
@@ -57,14 +79,42 @@ const HeroPage = (function(){
     document.getElementById('page-hero').innerHTML = html;
   }
 
+  function handleHeroImageDrop(e) {
+    const file = e.dataTransfer.files[0];
+    processHeroImage(file);
+  }
+
+  function handleHeroImageUpload(e) {
+    const file = e.target.files[0];
+    processHeroImage(file);
+  }
+
+  function processHeroImage(file) {
+    if(!file) return;
+    if(!file.type.startsWith('image/')){ showToast('Only images allowed','error'); return; }
+    if(file.size > 2*1024*1024){ showToast('File too large (max 2MB)','error'); return; }
+    const reader = new FileReader();
+    reader.onload = function(e){
+      tempHeroImage = e.target.result;
+      document.getElementById('heroImagePreview').innerHTML = `<img src="${tempHeroImage}" style="max-height:200px;border-radius:12px;border:2px solid var(--border)">`;
+      showToast('Image staged! Click Save to apply.');
+    };
+    reader.readAsDataURL(file);
+  }
+
   function saveHero(){
     const h = Store.get('hero',{});
-    h.title = document.getElementById('hTitle').value;
-    h.subtitle = document.getElementById('hSub').value;
-    h.subtitle2 = document.getElementById('hSub2').value;
-    h.bio = document.getElementById('hBio').value;
-    h.locationBadge = document.getElementById('hLocationBadge') ? document.getElementById('hLocationBadge').value : '';
-    h.roles = document.getElementById('hRoles').value.split('\n').filter(Boolean);
+    if(document.getElementById('hTitle')) {
+      h.title = document.getElementById('hTitle').value;
+      h.subtitle = document.getElementById('hSub').value;
+      h.subtitle2 = document.getElementById('hSub2').value;
+      h.bio = document.getElementById('hBio').value;
+      h.locationBadge = document.getElementById('hLocationBadge') ? document.getElementById('hLocationBadge').value : '';
+      h.roles = document.getElementById('hRoles').value.split('\n').filter(Boolean);
+    }
+    if (tempHeroImage) {
+      h.image_url = tempHeroImage;
+    }
     Store.set('hero',h);
     showToast('Hero section updated!');
     AdminAuth.addActivity('Updated hero section');
@@ -96,14 +146,31 @@ const HeroPage = (function(){
   // About Section
   function renderAbout(){
     const about = Store.get('about',{bio:'I\'m a Computer Science graduate from Ghana with a deep passion for building elegant software solutions.',objective:'To leverage my skills in software development and IT support to drive digital innovation.',education:[{degree:'BSc Computer Science',school:'Kings University College',year:'2020–2024'}],certifications:['Google IT Support Professional Certificate'],hobbies:['Reading','Football','Music','Open Source','Tech Innovation']});
+    tempAboutImage = about.image_url || null;
 
-    let html = `<div class="page-header"><h1>About Section</h1><p>Edit your biography and personal information.</p></div>`;
+    let html = `<div class="page-header"><h1>About Section</h1><p>Edit your biography, personal information, and photo.</p></div>`;
+    
+    // About Image Upload
+    html += `<div class="card" style="margin-bottom:20px"><div class="card-header"><span class="card-title">About Photo</span></div><div class="card-body">
+      <div class="dropzone" id="aboutDropzone" onclick="document.getElementById('aboutImageInput').click()"
+        ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')"
+        ondrop="event.preventDefault();this.classList.remove('dragover');HeroPage.handleAboutImageDrop(event)">
+        <div class="dropzone-icon">🖼️</div>
+        <div class="dropzone-text" id="aboutDropzoneText">Drag & drop about image here or click to upload<br><small style="color:var(--muted)">PNG, JPG, SVG, WEBP supported</small></div>
+        <input type="file" id="aboutImageInput" style="display:none" accept="image/*" onchange="HeroPage.handleAboutImageUpload(event)">
+      </div>
+      <div id="aboutImagePreview" style="margin-top:12px;text-align:center;">
+        ${tempAboutImage ? `<img src="${tempAboutImage}" style="max-height:200px;border-radius:12px;border:2px solid var(--border)">` : ''}
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="HeroPage.saveAbout()" style="margin-top:12px">Save Photo</button>
+    </div></div>`;
+
     html += `<div class="grid-2">`;
     html += `<div class="card"><div class="card-header"><span class="card-title">Biography</span></div><div class="card-body">
       <div class="form-group"><label>Bio</label><textarea class="form-input" id="aBio" style="min-height:120px">${about.bio}</textarea></div>
       <div class="form-group"><label>Career Objective</label><textarea class="form-input" id="aObj">${about.objective||''}</textarea></div>
       <div class="form-group"><label>Hobbies (comma separated)</label><input class="form-input" id="aHobbies" value="${(about.hobbies||[]).join(', ')}"></div>
-      <button class="btn btn-primary btn-sm" onclick="HeroPage.saveAbout()">Save About</button>
+      <button class="btn btn-primary btn-sm" onclick="HeroPage.saveAbout()">Save Text</button>
     </div></div>`;
 
     html += `<div class="card"><div class="card-header"><span class="card-title">Education</span></div><div class="card-body">`;
@@ -115,25 +182,53 @@ const HeroPage = (function(){
       </div>`;
     });
     html += `<div class="form-group"><label>Certifications (one per line)</label><textarea class="form-input" id="aCerts">${(about.certifications||[]).join('\n')}</textarea></div>
-      <button class="btn btn-primary btn-sm" onclick="HeroPage.saveAbout()">Save</button>
+      <button class="btn btn-primary btn-sm" onclick="HeroPage.saveAbout()">Save Education</button>
     </div></div></div>`;
 
     document.getElementById('page-about').innerHTML = html;
   }
 
+  function handleAboutImageDrop(e) {
+    const file = e.dataTransfer.files[0];
+    processAboutImage(file);
+  }
+
+  function handleAboutImageUpload(e) {
+    const file = e.target.files[0];
+    processAboutImage(file);
+  }
+
+  function processAboutImage(file) {
+    if(!file) return;
+    if(!file.type.startsWith('image/')){ showToast('Only images allowed','error'); return; }
+    if(file.size > 2*1024*1024){ showToast('File too large (max 2MB)','error'); return; }
+    const reader = new FileReader();
+    reader.onload = function(e){
+      tempAboutImage = e.target.result;
+      document.getElementById('aboutImagePreview').innerHTML = `<img src="${tempAboutImage}" style="max-height:200px;border-radius:12px;border:2px solid var(--border)">`;
+      showToast('Image staged! Click Save to apply.');
+    };
+    reader.readAsDataURL(file);
+  }
+
   function saveAbout(){
     const about = Store.get('about',{});
-    about.bio = document.getElementById('aBio').value;
-    about.objective = document.getElementById('aObj').value;
-    about.hobbies = document.getElementById('aHobbies').value.split(',').map(t=>t.trim()).filter(Boolean);
-    about.certifications = document.getElementById('aCerts').value.split('\n').filter(Boolean);
-    // Save education entries
-    const edu = about.education||[];
-    edu.forEach((e,i)=>{
-      const deg=document.getElementById('eDeg'+i);
-      if(deg){ e.degree=deg.value; e.school=document.getElementById('eSch'+i).value; e.year=document.getElementById('eYr'+i).value; }
-    });
-    about.education = edu;
+    if (document.getElementById('aBio')) {
+      about.bio = document.getElementById('aBio').value;
+      about.objective = document.getElementById('aObj').value;
+      about.hobbies = document.getElementById('aHobbies').value.split(',').map(t=>t.trim()).filter(Boolean);
+      about.certifications = document.getElementById('aCerts').value.split('\n').filter(Boolean);
+      // Save education entries
+      const edu = about.education||[];
+      edu.forEach((e,i)=>{
+        const deg=document.getElementById('eDeg'+i);
+        if(deg){ e.degree=deg.value; e.school=document.getElementById('eSch'+i).value; e.year=document.getElementById('eYr'+i).value; }
+      });
+      about.education = edu;
+    }
+    if (tempAboutImage) {
+      about.image_url = tempAboutImage;
+    }
     Store.set('about',about);
     showToast('About section updated!');
     AdminAuth.addActivity('Updated about section');
@@ -156,5 +251,5 @@ const HeroPage = (function(){
     reader.readAsDataURL(file);
   }
 
-  return { render, saveHero, saveStats, saveSocial, renderAbout, saveAbout, handleCVUpload };
+  return { render, saveHero, saveStats, saveSocial, renderAbout, saveAbout, handleCVUpload, handleHeroImageDrop, handleHeroImageUpload, handleAboutImageDrop, handleAboutImageUpload };
 })();
