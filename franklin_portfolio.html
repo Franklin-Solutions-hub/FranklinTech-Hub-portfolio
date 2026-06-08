@@ -1684,12 +1684,56 @@
       }
     }
 
+    .floating-tg {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background-color: #0088cc;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0, 136, 204, 0.4);
+      z-index: 1000;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: pulse-tg 2s infinite;
+      animation-delay: 1s;
+    }
+
+    @media (hover: hover) {
+      .floating-tg:hover {
+        transform: scale(1.1) translateY(-5px);
+        box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6);
+      }
+    }
+
+    @keyframes pulse-tg {
+      0% {
+        box-shadow: 0 0 0 0 rgba(0, 136, 204, 0.5);
+      }
+      70% {
+        box-shadow: 0 0 0 15px rgba(0, 136, 204, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 136, 204, 0);
+      }
+    }
+
     @media(max-width:768px) {
+      .floating-wa, .floating-tg {
+        width: 55px;
+        height: 55px;
+      }
       .floating-wa {
         bottom: 20px;
         right: 20px;
-        width: 55px;
-        height: 55px;
+      }
+      .floating-tg {
+        bottom: 85px;
+        right: 20px;
       }
     }
   </style>
@@ -2604,7 +2648,15 @@
           const setLink = (title, url, isMail) => {
             if (!url) return;
             document.querySelectorAll(`a[title="${title}"]`).forEach(a => {
-              a.href = isMail && !url.startsWith('mailto:') ? 'mailto:' + url : url;
+              if (isMail && !url.startsWith('mailto:')) {
+                a.href = 'mailto:' + url;
+              } else if (title === 'WhatsApp' && !url.startsWith('http')) {
+                a.href = 'https://wa.me/' + url.replace(/[^0-9]/g, '');
+              } else if (title === 'Telegram' && !url.startsWith('http')) {
+                a.href = 'https://t.me/' + url.replace(/[^a-zA-Z0-9_]/g, '');
+              } else {
+                a.href = url;
+              }
             });
           };
           setLink('GitHub', social.github);
@@ -2612,11 +2664,27 @@
           setLink('WhatsApp', social.whatsapp);
           setLink('Twitter/X', social.twitter);
           setLink('TikTok', social.tiktok);
+          setLink('Telegram', social.telegram);
           setLink('Email', social.email, true);
           if (social.phone) { const cp = document.getElementById('contactPhone'); if (cp) cp.textContent = social.phone; }
           if (social.email) { const ce = document.getElementById('contactEmail'); if (ce) ce.textContent = social.email; }
           if (social.location) { const cl = document.getElementById('contactLocation'); if (cl) cl.textContent = social.location; }
-          if (social.whatsapp) { const fw = document.querySelector('.floating-wa'); if (fw) fw.href = social.whatsapp; }
+          if (social.whatsapp) {
+            const fw = document.querySelector('.floating-wa'); 
+            if (fw) {
+              let wa = social.whatsapp;
+              if (!wa.startsWith('http')) wa = 'https://wa.me/' + wa.replace(/[^0-9]/g, '');
+              fw.href = wa;
+            }
+          }
+          if (social.telegram) {
+            const ft = document.querySelector('.floating-tg'); 
+            if (ft) {
+              let tg = social.telegram;
+              if (!tg.startsWith('http')) tg = 'https://t.me/' + tg.replace(/[^a-zA-Z0-9_]/g, '');
+              ft.href = tg;
+            }
+          }
         }
 
         // --- Projects ---
@@ -2714,6 +2782,13 @@
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBlogModal(); });
   </script>
+
+  <!-- FLOATING TELEGRAM BUTTON -->
+  <a href="#" class="floating-tg" target="_blank" title="Chat on Telegram">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="#ffffff">
+      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.686c.223-.198-.054-.306-.346-.11l-6.4 4.02-2.76-.86c-.6-.188-.61-.6.126-.89l10.814-4.17c.502-.18.96.123.82.88z" />
+    </svg>
+  </a>
 
   <!-- FLOATING WHATSAPP BUTTON -->
   <a href="https://wa.me/233201001024" class="floating-wa" target="_blank" title="Chat on WhatsApp">

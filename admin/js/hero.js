@@ -64,6 +64,9 @@ const HeroPage = (function(){
         <div class="form-group"><label>Email</label><input class="form-input" id="sEmail" value="${social.email||''}"></div>
         <div class="form-group"><label>YouTube</label><input class="form-input" id="sYoutube" value="${social.youtube||''}"></div>
       </div>
+      <div class="form-row">
+        <div class="form-group"><label>Telegram</label><input class="form-input" id="sTelegram" value="${social.telegram||''}" placeholder="Username or link"></div>
+      </div>
       <button class="btn btn-primary btn-sm" onclick="HeroPage.saveSocial()" style="margin-top:8px">Save Social Links</button>
     </div></div>`;
 
@@ -137,7 +140,8 @@ const HeroPage = (function(){
       whatsapp:document.getElementById('sWhatsapp').value,
       twitter:document.getElementById('sTwitter').value,
       email:document.getElementById('sEmail').value,
-      youtube:document.getElementById('sYoutube').value
+      youtube:document.getElementById('sYoutube').value,
+      telegram:document.getElementById('sTelegram') ? document.getElementById('sTelegram').value : ''
     });
     showToast('Social links updated!');
     AdminAuth.addActivity('Updated social links');
